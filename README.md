@@ -35,7 +35,7 @@ The program can be run with default values for all parameters, simply by executi
 
 `julia infection_simulation.jl`
 
-(assuming the julia interpreter is on your path, and the command window in which you are running has the folder that contains the )
+(assuming the julia interpreter is on your path, and the command window in which you are running has the folder that contains the Julia script file)
 
 Running without any overrides for the parameter values would entail using the following defaults:
 
@@ -58,7 +58,7 @@ Running without any overrides for the parameter values would entail using the fo
 --vacc_saving_throw 1.0  
 --vax_effective_rate 0.8
 
-To change any of the parameters from their default, specify a different value for the parameter. For example, if you wanted to start with a higher R0 from the default but a lower rate of initial vaccination, you might use:
+To change any of the parameters from their default, specify a different value for the parameter. For example, if you wanted to start with a higher R0 from the default, a lower rate of initial vaccination, but a higher effective rate, you might use:
 
 `julia infection_simulation.jl --r_naught 0.2 --initial_vacc_rate 0.3 --vax_effective_rate 0.9`
 
@@ -78,11 +78,15 @@ Running the command with the following parameters
 
 produces the following charts:
 
-![Daily Plot](output/trials_20220906_223036_daily.png)
+![Daily Plot](output/trials_20220924_125104_daily.png)
 
-![Cumulative Plot](output/trials_20220906_223036_cumul.png)
+![Cumulative Plot](output/trials_20220924_125104_cumul.png)
 
-The corresponding data can be viewed in the [CSV file](./output/trials_20220906_223036.csv)
+![Contour Plot](output/trials_20220924_125104_contr.png)
+
+The contour plot shows the log of the number of times the simulation counted the number of people sick Y on day X
+
+The corresponding data can be viewed in the [CSV file](./output/trials_20220924_125104.csv)
 
 ### Trial 2
 
@@ -92,8 +96,30 @@ Running the command with the following parameters
 
 produces the following charts:
 
-![Daily Plot](output/trials_20220906_223735_daily.png)
+![Daily Plot](output/trials_20220924_125247_daily.png)
 
-![Cumulative Plot](output/trials_20220906_223735_cumul.png)
+![Cumulative Plot](output/trials_20220924_125247_cumul.png)
 
-The corresponding data can be viewed in the [CSV file](./output/trials_20220906_223735.csv)
+![Contour Plot](output/trials_20220924_125247_contr.png)
+
+The contour plot shows the log of the number of times the simulation counted the number of people sick Y on day X
+
+The corresponding data can be viewed in the [CSV file](./output/trials_20220924_125247.csv)
+
+### Trial 3
+
+Running the command with the following parameters
+
+`julia infection_simulation.jl --max_iteration_days 100 --r_naught 0.35 --initsick_prob 0.03`
+
+produces the following charts:
+
+![Daily Plot](output/trials_20220924_130408_daily.png)
+
+![Cumulative Plot](output/trials_20220924_130408_cumul.png)
+
+![Contour Plot](output/trials_20220924_130408_contr.png)
+
+The contour plot shows the log of the number of times the simulation counted the number of people sick Y on day X
+
+The corresponding data can be viewed in the [CSV file](./output/trials_20220924_130408.csv)

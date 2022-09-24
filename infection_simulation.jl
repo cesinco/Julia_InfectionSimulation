@@ -1,5 +1,5 @@
 # Running the code - example:
-# D:\julia-1.6.1\bin\julia.exe --color=yes --project=C:\Users\cesin\.julia\environments\v1.6 d:\GitRoot\Julia_InfectionSimulation\infection_simulation.jl --initial_vacc_rate 0.25 -d 500
+#julia.exe Julia_InfectionSimulation\infection_simulation.jl --initial_vacc_rate 0.25 -d 500
 
 # Running from the REPL:
 # include("infection_simulation.jl")
@@ -232,6 +232,7 @@ function make_plots(
 
     daily_stats_line_plot(df, text_overlay, out_file_name)
     cumul_stats_line_plot(df, text_overlay, out_file_name)
+    daily_contour_plot(df, out_file_name)
 
 end
 
@@ -259,7 +260,7 @@ function daily_stats_line_plot(
     labels = ["Infected" "Recovered" "Deceased"]
     colors = [:red :blue :black]
     plot_lin = plot(
-        (df_line_plot.Day, [df_line_plot.CountSick, df_line_plot.CountRecovered, df_line_plot.CountDeceased])
+          (df_line_plot.Day, [df_line_plot.CountSick, df_line_plot.CountRecovered, df_line_plot.CountDeceased])
         , size          = (x_plot_size, y_plot_size)
         , title         = plot_title
         , xlabel        = x_label
@@ -348,6 +349,38 @@ function cumul_stats_line_plot(
     end
 
     savefig("$(out_file_name)_cumul.png")
+
+end
+
+function daily_contour_plot(
+    df                   :: DataFrame
+  , out_file_name        :: String
+)
+    x_plot_size = 600
+    y_plot_size = 600
+
+    X = [1:1:maximum(df.Day);]
+    Y = [1:1:maximum(df.CountSick);]
+    df_combine = combine(groupby(rename(df[!, ["Day", "CountSick"]], [:Day => :X, :CountSick => :Y]), ["X", "Y"]), :Y => counts => :Count)
+    df_combine.LogCount = round.(10.0 .* log.(df_combine.Count), digits=0)
+    #f(x,y) = sum(df_combine[(df_combine.X .== x) .& (df_combine.Y .== y), :Count])
+    f(x,y) = sum(df_combine[(df_combine.X .== x) .& (df_combine.Y .== y), :LogCount])
+
+    plot_contour = contourf(
+          X
+        , Y
+        , f
+        , color         = :viridis
+        , size          = (x_plot_size, y_plot_size)
+        #, levels        = 0.5:0.01:1.0
+        #, mode          = :relative
+        #, levels        = 10.0:10.0:float(maximum(df_combine.Count))
+        #, levels        = 10
+        #, levels        = 1.0 : float(maximum(df_combine.Count))/10.0 : float(maximum(df_combine.Count))
+        , levels        = 1.0 : float(maximum(df_combine.LogCount))/10.0 : float(maximum(df_combine.LogCount))
+    )
+
+    savefig("$(out_file_name)_contr.png")
 
 end
 
